@@ -8,53 +8,52 @@ import java.util.List;
 
 public class StudentMapper {
 
-	public static Student getStudent(int key) throws Exception, ClassNotFoundException, SQLException {
+	public static Person getPerson(int key) throws Exception, ClassNotFoundException, SQLException {
 
-		Student student = IdentityMap.get(key);
-		if (student != null) {
-			System.out.println("Encontro al estudiante en el Map: "+student.toString());
-			return student;
+		Person person = IdentityMap.get(key);
+		if (person != null) {
+			System.out.println("Encontro al estudiante en el Map: " + person.toString());
+			return person;
 		} else {
-			Student studentBD = findByIdBD(key);
-			IdentityMap.add(studentBD);
-			System.out.println("Encontro al estudiante en BD: "+studentBD.toString());
-			return studentBD;
+			Person personBD = findByIdBD(key);
+			IdentityMap.add(personBD);
+			System.out.println("Encontro al estudiante en BD: " + personBD.toString());
+			return personBD;
 		}
 
 	}
-	
+
 	public static void removeStudentById(int key) {
 		IdentityMap.remove(key);
 	}
-	
-	public static void clearStudents() {
+
+	public static void clearPersons() {
 		IdentityMap.clear();
 	}
 
-	private static Student findByIdBD(int key) throws Exception {
+	private static Person findByIdBD(int key) throws Exception {
 		Connection con = null;
 		Class.forName("com.mysql.jdbc.Driver");
 		String url = "jdbc:mysql://localhost/proyectoUngs";
 		String user = "root";
 		String pass = "Technisys2019";
 		con = DriverManager.getConnection(url, user, pass);
-		System.out.println("conexion exitosa");
+		System.out.println("conexion exitosa:");
 		Statement stmt = con.createStatement();
 
-		// SELECT * FROM STUDENT BY ID
-		ResultSet rs = stmt.executeQuery("SELECT * FROM student WHERE id="+key);
+		// SELECT * FROM PERSON BY ID
+		ResultSet rs = stmt.executeQuery("SELECT * FROM person WHERE id=" + key);
 		if (rs.next()) {
 			int id = rs.getInt("id");
+			int age = rs.getInt("age");
+			int dni = rs.getInt("dni");
 			String name = rs.getString("name");
 			String lastName = rs.getString("lastname");
-			String email = rs.getString("email");
-			int age = rs.getInt("age");
-//			System.out.format("%s, %s, %s, %s\n", id, name, lastName, age);
 
 			rs.close();
 			con.close();
 
-			Student student = new Student(id, name, lastName, email, age);
+			Person student = new Person(id, age, dni, name, lastName);
 
 			return student;
 		} else {
@@ -63,28 +62,29 @@ public class StudentMapper {
 		}
 		return null;
 	}
-	
-	public static List<Student> findAll() throws Exception {
+
+	public static List<Person> findAll() throws Exception {
 		Connection con = null;
 		Class.forName("com.mysql.jdbc.Driver");
-		String url = "jdbc:mysql://localhost/proyectoungs";
+		String url = "jdbc:mysql://localhost/proyectoUngs";
 		String user = "root";
-		con = DriverManager.getConnection(url, user, user);
-		System.out.println("conexion exitosa");
+		String pass = "Technisys2019";
+		con = DriverManager.getConnection(url, user, pass);
+		System.out.println("conexion exitosa:");
 		Statement stmt = con.createStatement();
 
-		// SELECT * FROM STUDENT
-		ResultSet rs = stmt.executeQuery("SELECT * FROM student");
-		
-		List<Student> students = new ArrayList<>();
+		// SELECT * FROM PERSON
+		ResultSet rs = stmt.executeQuery("SELECT * FROM person");
+
+		List<Person> students = new ArrayList<>();
 		while (rs.next()) {
 			int id = rs.getInt("id");
+			int age = rs.getInt("age");
+			int dni = rs.getInt("dni");
 			String name = rs.getString("name");
 			String lastName = rs.getString("lastname");
-			String email = rs.getString("email");
-			int age = rs.getInt("age");
 
-			Student student = new Student(id, name, lastName, email, age);
+			Person student = new Person(id, age, dni, name, lastName);
 			students.add(student);
 		}
 		rs.close();

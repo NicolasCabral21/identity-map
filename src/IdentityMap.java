@@ -3,15 +3,15 @@ import java.util.HashMap;
 
 public class IdentityMap {
 	
-	private static Map<Integer, Student> hash = new HashMap<Integer, Student>();
+	private static Map<Integer, Person> hash = new HashMap<Integer, Person>();
 
-	public static Student get(int key) throws Exception {
-		Student student = hash.get(key);
-		return student;
+	public static Person get(int key) throws Exception {
+		Person person = hash.get(key);
+		return person;
 	}
 
-	public static void add(Student student) {
-		hash.put(new Integer(student.getId()), student);
+	public static void add(Person person) {
+		hash.put(person.getId(), person);
 	}
 	
 	public static void remove(int key) {
